@@ -14,14 +14,6 @@ exports.sanitizeObject = (params) => {
     }, {});
 };
 
-exports.safeParse = (input) => {
-    try {
-        return input ? JSON.parse(input) : {};
-    } catch {
-        return {};
-    }
-}
-
 exports.normalizeArgs = (input) => {
     if (Array.isArray(input)) {
         return { message: JSON.stringify(input) };
@@ -31,11 +23,3 @@ exports.normalizeArgs = (input) => {
 
     return { message: String(input) };
 }
-
-exports.num2Int = (number) => {
-    if (isNaN(number)) {
-        return 0;
-    }
-
-    return parseInt(number);
-};
