@@ -2,14 +2,19 @@
 
 const { sanitizeObject, normalizeArgs } = require("../helper/function");
 exports.useLogstyx = (options) => {
-    const {
+    let {
         projectId,
         apiKey,
         appid,//required if its from mobile apps
         endpoint = "https://api.logstyx.com/v1/logs",
         device,
+        sendFunc,
         signatureFunc,
     } = options;
+
+    if (typeof sendFunc !== 'function') {
+        sendFunc = fetch
+    }
 
     let sharedContext = sanitizeObject({
         appid
@@ -46,7 +51,7 @@ exports.useLogstyx = (options) => {
                 headers.timestamp = timestamp
             }
 
-            return fetch(endpoint, {
+            return sendFunc(endpoint, {
                 method: 'POST',
                 body: JSON.stringify(payload),
                 headers
