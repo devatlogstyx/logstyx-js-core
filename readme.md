@@ -22,7 +22,7 @@ logstyx-js-core is a core SDK for logging in JavaScript applications. It provide
 To install the SDK, run:
 
 ```bash
-npm install github:devatlogstyx/logstyx-js-core#release
+npm install github:devatlogstyx/logstyx-js-core
 ```
 
 ## Usage
