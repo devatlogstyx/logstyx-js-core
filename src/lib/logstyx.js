@@ -35,7 +35,6 @@ exports.useLogstyx = (options) => {
     async function send(level, data = {}) {
         try {
             const payload = sanitizeObject({
-                timestamp: new Date().toISOString(),
                 level,
                 projectId,
                 device,
