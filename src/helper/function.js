@@ -15,7 +15,15 @@ exports.sanitizeObject = (params) => {
 };
 
 exports.normalizeArgs = (input) => {
-    if (Array.isArray(input)) {
+    if (input instanceof Error) {
+        return {
+            title: input.name,  // or input.constructor.name
+            message: input.message,
+            stack: input.stack || null
+        };
+    } else if (input === null || input === undefined) {
+        return { message: String(input) };
+    } else if (Array.isArray(input)) {
         return { message: JSON.stringify(input) };
     } else if (typeof input === "object") {
         return input;
