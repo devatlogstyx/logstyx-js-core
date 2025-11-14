@@ -16,9 +16,9 @@ exports.useLogstyx = (options) => {
         sendFunc = fetch
     }
 
-    let sharedContext = sanitizeObject({
+    let sharedContext = {
         appid
-    })
+    }
 
     function setContext(ctx) {
         sharedContext = { ...sharedContext, ...ctx };
@@ -37,6 +37,7 @@ exports.useLogstyx = (options) => {
             const payload = sanitizeObject({
                 level,
                 projectId,
+                appid,
                 device,
                 context: sanitizeObject(sharedContext),
                 data: sanitizeObject(normalizeArgs(data))
