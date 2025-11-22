@@ -1,6 +1,6 @@
 {
   "name": "logstyx-js-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "logstyx core sdk for javascript",
   "main": "./dist/logstyx-js-core.js",
   "scripts": {
