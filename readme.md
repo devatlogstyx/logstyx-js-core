@@ -14,6 +14,18 @@ logstyx-js-core is a core SDK for logging in JavaScript applications. It provide
 
 These packages provide framework-specific features and better developer experience.
 
+## Self-Hosting
+
+Logstyx can be self-hosted! Check out the [logstyx backend repository](https://github.com/devatlogstyx/logstyx) to deploy your own instance.
+
+When using a self-hosted instance, make sure to set the `endpoint` option to your deployment URL:
+```javascript
+const logger = useLogstyx({
+    projectId: 'your_project_id',
+    endpoint: 'https://your-domain.com/api/v1/logs', // Your self-hosted instance
+});
+```
+
 ## Table of Contents
 
 - [Features](#features)
@@ -70,7 +82,7 @@ Initializes the logger instance.
   - `projectId`: The unique identifier for your project (required).
   - `apiKey`: Your API key for authentication (required for server).
   - `appid`: Application ID, required for mobile apps (required for mobile apps).
-  - `endpoint`: API endpoint to send logs to (default: "https://<your_domain>/api/v1/logs").
+  - `endpoint`: API endpoint to send logs to. Use your deployed instance URL (e.g., `https://your-domain.com/api/v1/logs`).
   - `device`: Identifier for the device sending the logs (optional).
   - `signatureFunc`: A function to provide a signature for secure logging (required for server).
 
