@@ -30,20 +30,30 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Bump version
         if: ${{ github.event.inputs.version_bump != 'none' }}
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
           # Bump version in package.json
-          npm version ${{ github.event.inputs.version_bump }} -m "chore: bump version to %s"
+          npm version ${{ github.event.inputs.version_bump }} --no-git-tag-version
+          
+          # Commit the version change
+          git add package.json package-lock.json
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          git commit -m "chore: bump version to v${NEW_VERSION}"
+          
+          # Create tag
+          git tag "v${NEW_VERSION}"
           
           # Push the version bump commit and tag to main
           git push origin main --follow-tags
+
+      - name: Install dependencies
+        run: npm install
 
       - name: Get current version
         id: package_version
@@ -56,9 +66,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
           # Backup necessary files
           cp package.json /tmp/package.json
           cp README.md /tmp/README.md || true
