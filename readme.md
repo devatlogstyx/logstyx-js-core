@@ -2,6 +2,18 @@
 
 logstyx-js-core is a core SDK for logging in JavaScript applications. It provides a simple and efficient way to send logs to the Logstyx logging platform, allowing developers to manage log levels and contexts effectively.
 
+## For End Users
+
+**Note:** This is the core SDK used by framework-specific packages. Unless you're building a custom integration, you probably want one of these instead:
+
+- **React**: [logstyx-js-react](https://github.com/devatlogstyx/logstyx-js-react)
+- **React Native**: [logstyx-js-react-native](https://github.com/devatlogstyx/logstyx-js-react-native)
+- **Node.js**: [logstyx-js-node](https://github.com/devatlogstyx/logstyx-js-node)
+- **Browser**: [logstyx-js-browser](https://github.com/devatlogstyx/logstyx-js-browser)
+- **Express**: [logstyx-js-express](https://github.com/devatlogstyx/logstyx-js-express)
+
+These packages provide framework-specific features and better developer experience.
+
 ## Table of Contents
 
 - [Features](#features)
@@ -19,7 +31,7 @@ logstyx-js-core is a core SDK for logging in JavaScript applications. It provide
 
 ## Installation
 
-To install the SDK, run:
+To install the latest version of the SDK, run:
 
 ```bash
 npm install github:devatlogstyx/logstyx-js-core#release
@@ -58,7 +70,7 @@ Initializes the logger instance.
   - `projectId`: The unique identifier for your project (required).
   - `apiKey`: Your API key for authentication (required for server).
   - `appid`: Application ID, required for mobile apps (required for mobile apps).
-  - `endpoint`: API endpoint to send logs to (default: "https://api.logstyx.com/v1/logs").
+  - `endpoint`: API endpoint to send logs to (default: "https://<your_domain>/api/v1/logs").
   - `device`: Identifier for the device sending the logs (optional).
   - `signatureFunc`: A function to provide a signature for secure logging (required for server).
 
@@ -75,7 +87,3 @@ Initializes the logger instance.
 ## Contributing
 
 Contributions are welcome! Please create a pull request or raise an issue if you find a bug or have a feature request.
-
-## License
-
-This project is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.

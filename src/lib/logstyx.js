@@ -6,7 +6,7 @@ exports.useLogstyx = (options) => {
         projectId,
         apiKey,
         appid,//required if its from mobile apps
-        endpoint = "https://api.logstyx.com/v1/logs",
+        endpoint,
         device,
         sendFunc,
         signatureFunc,
