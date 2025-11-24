@@ -14,47 +14,56 @@ exports.sanitizeObject = (params) => {
     }, {});
 };
 
-const safeClone = (value) => {
-    if (value === null || typeof value !== 'object') {
-        return value;
-    }
-
-    if (seen.has(value)) {
-        return '[Circular]';
-    }
-
-    seen.add(value);
-
-    if (Array.isArray(value)) {
-        return value.map(item => safeClone(item));
-    }
-
-    const cloned = {};
-    for (const key in value) {
-        if (value.hasOwnProperty(key) && typeof value[key] !== 'function') {
-            cloned[key] = safeClone(value[key]);
-        }
-    }
-    return cloned;
-};
-
 exports.normalizeArgs = (input) => {
+    const MAX_DEPTH = 2;
+    const MAX_STRING_LENGTH = 500;
+
+    const safeClone = (value, depth = 0, seen = new WeakSet()) => {
+        if (value === null || typeof value !== 'object') {
+            if (typeof value === 'string' && value.length > MAX_STRING_LENGTH) {
+                return value.substring(0, MAX_STRING_LENGTH) + '... (truncated)';
+            }
+            return value;
+        }
+
+        if (depth >= MAX_DEPTH) {
+            return '[Max depth reached]';
+        }
+
+        if (seen.has(value)) {
+            return '[Circular]';
+        }
+
+        seen.add(value);
+
+        if (Array.isArray(value)) {
+            return value.slice(0, 10).map(item => safeClone(item, depth + 1, seen));
+        }
+
+        const cloned = {};
+        for (const key in value) {
+            // Skip properties starting with underscore
+            if (key.startsWith('_')) continue;
+
+            if (Object.prototype.hasOwnProperty.call(value, key) && typeof value[key] !== 'function') {
+                cloned[key] = safeClone(value[key], depth + 1, seen);
+            }
+        }
+        return cloned;
+    };
+
     if (input instanceof Error) {
         const errorObj = {
-            name: input.name,
+            title: input.name ?? input?.constructor?.name,
             message: input.message,
             stack: input.stack || null
         };
 
-        // Track seen objects to detect circular references
         const seen = new WeakSet();
 
-
-
-        // Capture any other custom properties on the error
         Object.keys(input).forEach(key => {
             if (!errorObj[key] && typeof input[key] !== 'function') {
-                errorObj[key] = safeClone(input[key]);
+                errorObj[key] = safeClone(input[key], 0, seen);
             }
         });
 
