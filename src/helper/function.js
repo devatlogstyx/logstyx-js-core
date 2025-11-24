@@ -14,20 +14,64 @@ exports.sanitizeObject = (params) => {
     }, {});
 };
 
+const safeClone = (value) => {
+    if (value === null || typeof value !== 'object') {
+        return value;
+    }
+
+    if (seen.has(value)) {
+        return '[Circular]';
+    }
+
+    seen.add(value);
+
+    if (Array.isArray(value)) {
+        return value.map(item => safeClone(item));
+    }
+
+    const cloned = {};
+    for (const key in value) {
+        if (value.hasOwnProperty(key) && typeof value[key] !== 'function') {
+            cloned[key] = safeClone(value[key]);
+        }
+    }
+    return cloned;
+};
+
 exports.normalizeArgs = (input) => {
     if (input instanceof Error) {
-        return {
-            title: input.name,  // or input.constructor.name
+        const errorObj = {
+            name: input.name,
             message: input.message,
             stack: input.stack || null
         };
-    } else if (input === null || input === undefined) {
+
+        // Track seen objects to detect circular references
+        const seen = new WeakSet();
+
+
+
+        // Capture any other custom properties on the error
+        Object.keys(input).forEach(key => {
+            if (!errorObj[key] && typeof input[key] !== 'function') {
+                errorObj[key] = safeClone(input[key]);
+            }
+        });
+
+        return errorObj;
+    }
+
+    if (input === null || input === undefined) {
         return { message: String(input) };
-    } else if (Array.isArray(input)) {
+    }
+
+    if (Array.isArray(input)) {
         return { message: JSON.stringify(input) };
-    } else if (typeof input === "object") {
+    }
+
+    if (typeof input === "object") {
         return input;
     }
 
     return { message: String(input) };
-}
+};
