@@ -164,6 +164,7 @@ exports.useLogstyx = (options) => {
         warning: (data) => send("WARNING", data),
         error: (data) => send("ERROR", data),
         critical: (data) => send("CRITICAL", data),
+        success: (data) => send("SUCCESS", data),
         send,
         setContext,
         clearContext,
